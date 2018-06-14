@@ -1,3 +1,6 @@
+##
+# TODO: Add key creation
+##
 import argparse
 import datetime
 import json
@@ -12,6 +15,7 @@ parser.add_argument('-p', '--path', required=False, help='Path for user. eg, Dev
 parser.add_argument('-k', '--key', required=False, help='set flag to create IAM key for user')
 parser.add_argument('-d', '--delete', required=False, help='Delete user', action='store_true')
 parser.add_argument('-c', '--create', required=False, help='Create user', action='store_true')
+parser.add_argument('-p', '--policy', required=False, help='Create user', action='store_true')
 
 args = parser.parse_args()
 
@@ -48,7 +52,6 @@ def creator(username, path):
     if path:
         response = client.create_user(Path=path, UserName=username)
         print(json.dumps(response, default=datetime_handler))
-
     else:
         response = client.create_user(UserName=username)
         print(json.dumps(response, default=datetime_handler))
