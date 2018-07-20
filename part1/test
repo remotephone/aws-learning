@@ -1,0 +1,11 @@
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": [
+          "arn:aws:iam::908482383090:role/CognitoAccessForAmazonES",
+          "arn:aws:cognito-idp:us-east-1:908482383090:userpool/us-east-1_5WodBsPkC"
+        ]
+      },
+      "Action": "es:ESHttp*",
+      "Resource": "arn:aws:es:us-east-1:908482383090:domain/aws-cloudtrail/*"
+    }
