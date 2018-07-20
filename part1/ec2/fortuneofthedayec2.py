@@ -27,16 +27,19 @@ def create_new_inst():
 
 
 for group_now in groups_now['SecurityGroups']:
+    print(group_now['GroupName'])
     if secgroup_name in group_now['GroupName']:
-        create_new_inst()
+        # create_new_inst()
+        print('creating new instance')
     else:
-        print('no')
-    sec_group = ec2.create_security_group(
-        GroupName=secgroup_name, Description='slice_0 sec group')
-    sec_group.authorize_ingress(
-        CidrIp=myip,
-        IpProtocol='tcp',
-        FromPort=22,
-        ToPort=22
-    )
+        print('lol')
+        sec_group = ec2.create_security_group(GroupName=secgroup_name, Description='slice_0 sec group')
+        sec_group.authorize_ingress(
+            CidrIp=myip,
+            IpProtocol='tcp',
+            FromPort=22,
+            ToPort=22
+        )
+        print('done')
+        break
 
