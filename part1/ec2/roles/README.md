@@ -1,0 +1,1 @@
+Taken from https://github.com/iMilnb/awstools/blob/master/platforms/roles/mkrole.py for the sake of quickly building the roles out. 

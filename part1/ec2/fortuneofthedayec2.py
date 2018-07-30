@@ -43,29 +43,34 @@ def create_new_inst():
 
 # need to test if group exists and handle that correctly. 
 def handle_sec_groups():
+    checkedgroups = []
+    print(groups_now)
     for group_now in groups_now['SecurityGroups']:
         print(group_now['GroupName'])
-        if secgroup_name in group_now['GroupName']:
-            # create_new_inst()
-            print('creating new instance')
-        else:
-            print('lol')
-            sec_group = ec2.create_security_group(GroupName=secgroup_name, Description='slice_0 sec group')
-            sec_group.authorize_ingress(
-                CidrIp=myip,
-                IpProtocol='tcp',
-                FromPort=22,
-                ToPort=22
-            )   
-            sec_group.authorize_ingress(
-                CidrIp='0.0.0.0/0',
-                IpProtocol='tcp',
-                FromPort=80,
-                ToPort=80
-            )
-            print('group made, creating instance')
-            # create_new_inst()
-            break
+        checkedgroups = checkedgroups.append(group_now['GroupName'])
+    print(checkedgroups)
+        # if secgroup_name in checkedgroups:
+        #     # create_new_inst()
+        #     print('creating new instance')
+        #     break
+        # else:
+        #     print('lol')
+        #     sec_group = ec2.create_security_group(GroupName=secgroup_name, Description='slice_0 sec group')
+        #     sec_group.authorize_ingress(
+        #         CidrIp=myip,
+        #         IpProtocol='tcp',
+        #         FromPort=22,
+        #         ToPort=22
+        #     )   
+        #     sec_group.authorize_ingress(
+        #         CidrIp='0.0.0.0/0',
+        #         IpProtocol='tcp',
+        #         FromPort=80,
+        #         ToPort=80
+        #     )
+        #     print('group made, creating instance')
+        #     # create_new_inst()
+        #     break
 
 get_instance_profile()
 handle_sec_groups()
