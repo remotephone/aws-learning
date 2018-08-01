@@ -1,0 +1,15 @@
+{
+    "version": "0.1.0",
+    "command": "aws",
+    "isShellCommand": true,
+    "showOutput": "always",
+    "args": [
+        "cloudformation",
+        "validate-template",
+        "--template-body",
+        "file://${file}",
+        "--profile",
+        "default-mfa"
+    ]
+
+}
