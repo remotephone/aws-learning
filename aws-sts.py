@@ -12,8 +12,8 @@ def get_serial(serial, awscreds, profile):
         serial = config.get(profile, 'mfa_serial')
         return serial
     except:
-        print('No MFA Serial Configured for ' + profile + ' profile!')
-        sys.exit(1)
+        print('No MFA Serial Configured for {} profile!'.format(profile))
+        raise SystemExit
 
 
 def get_token(profile, duration, serial, token):
@@ -30,8 +30,8 @@ def get_token(profile, duration, serial, token):
         temptok = response['Credentials']['SessionToken']
         return acckey, seckey, temptok
     except:
-        print('[!] - Something went wrong, check your MFA token and serial, ' + serial)
-        sys.exit(1)
+        print('[!] - Something went wrong, check your MFA token and serial, {}'.format(serial))
+        raise SystemExit
 
 def update_creds(profile, awscreds, acckey, seckey, temptok):
     mfaprofname = profile + '-mfa'
@@ -87,7 +87,7 @@ def main():
     acckey, seckey, temptok = get_token(profile, duration, serial, token)
     update_creds(profile, awscreds, acckey, seckey, temptok)
     update_config(profile, region)
-    print('Configured profile "' + profile + '-mfa" to use "' + region + '" region')
+    print('Configured profile "{}-mfa" to use "{}" region'.format(profile, region))
 
 
 
