@@ -65,6 +65,7 @@ def handle_sec_groups(secgroup_name):
     print('printing checkedgroups')
     print(checkedgroups)
     if secgroup_name in checkedgroups:
+        
         # create_new_inst()
         print('creating new instance')
     else:
