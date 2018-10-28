@@ -91,7 +91,7 @@ def main():
 
         
     instance = create_new_inst(session, sec_group)
-    print(instance)
+    print(instance.id)
     json.dumps(instance)
 
 
