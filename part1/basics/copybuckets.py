@@ -6,6 +6,8 @@ import argparse
 import json
 import sys
 import boto3
+from awscli.clidriver import create_clidriver
+
 
 
 
@@ -23,7 +25,6 @@ dest_bucket = args.destination
 if os.environ.get('LC_CTYPE', '') == 'UTF-8':
     os.environ['LC_CTYPE'] = 'en_US.UTF-8'
 
-from awscli.clidriver import create_clidriver
 driver = create_clidriver()
 driver.main('s3 mv s3://remotephone-dev-cloudtrail/log s3://aws-remotephone-cloudtrail-4ofj2jfgawser/test --recursive'.split())
 

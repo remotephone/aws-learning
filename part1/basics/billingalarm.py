@@ -9,6 +9,7 @@ import json
 import sys
 import logging as log
 
+from pick import pick
 import boto3
 
 # Parse arguments
@@ -17,6 +18,8 @@ parser.add_argument('-a', '--alarmname', required=True, help='Name your billing 
 parser.add_argument('-c', '--costpermonth', required=True, help='Trigger alarm when charges meet this value in $USD')
 parser.add_argument('-d', '--alarmdescription', required=True, help='Describe your alarm in "\'s')
 parser.add_argument('-s', '--snstopic', required=False, help='Full ARN of SNS Topic to publish to')
+parser.add_argument('-p', '--profile', required=True, help='profile name from aws creds')
+
 
 args = parser.parse_args()
 
@@ -24,52 +27,57 @@ alarmname = args.alarmname
 costpermonth = args.costpermonth
 alarmdescription = args.alarmdescription
 snstopic = args.snstopic
+profile = args.profile
+session = boto3.Session(profile_name=profile, region_name='us-east-1')
 
 # I want to query available sns topics and provide them as a list to the user
 
-def get_topics():
-    gottopics = []
-    snsclient = boto3.client('sns')
+def get_topics(session):
+    snsclient = session.client('sns')
     snstopics = snsclient.list_topics()
     print("Which topic do you want to send notifications to?")
 
-    for topic in snstopics['Topics']:
-        gottopics.append(topic)
-        print("- " + topic['TopicArn'])
-    # itemcount = len(gottopics)
-    # rangecount = range(0, itemcount)
-    # optionslist = dict(zip(rangecount), snstopics['Topics'])
-    # print(optionslist)
-    # return optionslist
-    return gottopics
+    # for topic in snstopics['Topics']:
+    #     gottopics.append(topic)
+    #     print("- " + topic['TopicArn'])
+
+    options = snstopics['Topics']
+    title = 'Pick an SNS topic to select'
+    option = pick(options, title)
+    print(options)
+    gottopic = option[0]['TopicArn']
+
+    return gottopic
 
 
 
-def check_alarms(gottopics):
-    cwclient = boto3.client('cloudwatch')
+def check_alarms(session, gottopic):
+    cwclient = session.client('cloudwatch')
+    alarms = []
     try:
         alarmsnow = cwclient.describe_alarms()
-        print(alarmsnow)
-        for k, v  in alarmsnow['MetricAlarms']['AlarmName']:
-            print(v)
+        for x in alarmsnow['MetricAlarms']:
+            result = (x['AlarmName'])
+            alarms.append(result)
     except:
         log.error("That didnt work")
 
+    return alarms
 
-def create_alarm(alarmname, alarmdescription, snstopic, costpermonth):
-    cwclient = boto3.client('cloudwatch')
+def create_alarm(session, alarmname, alarmdescription, snstopic, costpermonth):
+    cwclient = session.client('cloudwatch')
     resp = cwclient.put_metric_alarm(
         AlarmName=alarmname,
         AlarmDescription=alarmdescription,
         ActionsEnabled=True,
         OKActions=[
-            snstopic,
+            snstopic
         ],
         AlarmActions=[
-            snstopic,
+            snstopic
         ],
         InsufficientDataActions=[
-            snstopic,
+            snstopic
         ],
         MetricName='EstimatedCharges',
         Namespace='AWS/Billing',
@@ -90,9 +98,10 @@ def create_alarm(alarmname, alarmdescription, snstopic, costpermonth):
     return resp
 
 if snstopic:
-    gottopics = snstopic
+    gottopic = snstopic
 else:
-    gottopics = get_topics()
+    gottopic = get_topics(session)
 
 print("now check_alarms")
-check_alarms(gottopics)
+alarmsnow = check_alarms(session, gottopic)
+print(alarmsnow)
