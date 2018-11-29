@@ -1,2 +1,4 @@
 testreport-1.csv
 *.pyc
+.vscode/
+pending/

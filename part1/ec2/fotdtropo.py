@@ -16,12 +16,12 @@ template.add_mapping('RegionMap', {
 
 
 motd_userdata = """#!/bin/bash
-    sudo apt update && sudo apt upgrade -y
-    sudo apt install apache2
-    sudo systemctl enable apache2
-    sudo systemctl restart apache2
-    aws s3 sync aws-learning-confs-q324t432/motd/ /var/www/html/
-    """
+sudo apt update && sudo apt upgrade -y
+sudo apt install apache2
+sudo systemctl enable apache2
+sudo systemctl restart apache2
+aws s3 sync aws-learning-confs-q324t432/motd/ /var/www/html/
+"""
 
 keyname_param = template.add_parameter(Parameter(
     "KeyName",
